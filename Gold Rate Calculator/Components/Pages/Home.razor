@@ -1,0 +1,158 @@
+﻿@page "/"
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gold Rate Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 10px;
+            background-color: #121212;
+            color: #ab895d;
+        }
+
+        .container {
+            display: flex;
+            max-width: 100%;
+            margin: auto;
+            background-color: #1c1c1c;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ab895d;
+            flex-direction: column;
+            align-content: center;
+            align-items: center;
+        }
+
+        .radio_pur {
+            display: flex;
+            max-width: 100%;
+            flex-direction: row;
+            align-content: center;
+            align-items: center;
+        }
+
+        h1, h2 {
+            font-size: 15px;
+            text-align: center;
+        }
+
+        label {
+            font-size: 14px;
+            display: block;
+            margin: 10px 0 5px;
+        }
+
+        input[type=number], button, select {
+            font-size: 15px;
+            padding: 10px;
+            margin: 5px 0 20px;
+            border-radius: 5px;
+            border: 1px solid #ab895d;
+            background-color: #2e2e2e;
+            color: #ab895d;
+        }
+
+        button {
+            width: 200px;
+            background-color: #ab895d;
+            color: #121212;
+            cursor: pointer;
+            margin: 20px;
+        }
+
+            button:hover {
+                background-color: #ab895d;
+            }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h4>Shree Ganpati Jewellers</h4>
+
+        <h6>Gold Rate Calculator</h6>
+
+        <label for="itemWeight">Total Weight of Item (gm):</label>
+        <input type="number" id="itemWeight" placeholder="Enter total weight of item">
+
+        <label for="goldRate">Gold Rate per 10gm:</label>
+        <input type="number" id="goldRate" placeholder="Enter gold rate per 10gm">
+
+        <label>Select Purity Type:</label>
+        <div class="radio_pur">
+            <input type="radio" id="purityPercentageRadio" name="purityType" value="percentage" checked>
+            <label for="purityPercentageRadio">Percentage</label>
+            <input type="radio" id="caratRadio" name="purityType" value="carat">
+            <label for="caratRadio">Carat</label>
+        </div>
+
+        <div id="purityPercentageInput">
+            <label for="purity">Purity Percentage (%):</label>
+            <input type="number" id="purity" placeholder="Enter purity percentage">
+        </div>
+
+        <div id="caratSelect" style="display: none;">
+            <label for="carat">Select Carat:</label>
+            <select id="carat">
+                <option value="99.99">24k - 99.99%</option>
+                <option value="91.67">22k - 91.67%</option>
+                <option value="75.00">18k - 75.00%</option>
+                <option value="58.33">14k - 58.33%</option>
+            </select>
+        </div>
+        <div class="radio_pur">
+            <button onclick="calculateGoldValue()">Calculate</button>
+            <button onclick="resetForm()">Reset</button>
+        </div>
+        <h2>Total Value: <span id="result">0</span></h2>
+    </div>
+
+    <script>
+        document.querySelectorAll('input[name="purityType"]').forEach(radio => {
+            radio.addEventListener('change', function () {
+                if (this.value === 'percentage') {
+                    document.getElementById('purityPercentageInput').style.display = 'block';
+                    document.getElementById('caratSelect').style.display = 'none';
+                } else {
+                    document.getElementById('purityPercentageInput').style.display = 'none';
+                    document.getElementById('caratSelect').style.display = 'block';
+                }
+            });
+        });
+
+        function calculateGoldValue() {
+            var goldRate = parseFloat(document.getElementById('goldRate').value);
+            var itemWeight = parseFloat(document.getElementById('itemWeight').value);
+            var purity;
+
+            if (document.getElementById('purityPercentageRadio').checked) {
+                purity = parseFloat(document.getElementById('purity').value) / 100;
+            } else {
+                purity = parseFloat(document.getElementById('carat').value) / 100;
+            }
+
+            if (isNaN(goldRate) || isNaN(itemWeight) || isNaN(purity)) {
+                alert('Please enter valid numbers.');
+                return;
+            }
+
+            var ratePerGram = goldRate / 10;
+            var totalValue = ratePerGram * itemWeight * purity;
+            document.getElementById('result').innerText = totalValue.toFixed(2);
+        }
+
+        function resetForm() {
+            document.getElementById('itemWeight').value = '';
+            document.getElementById('goldRate').value = '';
+            document.getElementById('purity').value = '';
+            document.getElementById('carat').value = '99.99';
+            document.getElementById('result').innerText = '0';
+            document.getElementById('purityPercentageRadio').checked = true;
+            document.getElementById('purityPercentageInput').style.display = 'block';
+            document.getElementById('caratSelect').style.display = 'none';
+        }
+    </script>
+</body>
+</html>
